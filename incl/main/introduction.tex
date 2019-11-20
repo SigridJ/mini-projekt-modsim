@@ -1,0 +1,42 @@
+\chapter{Indledning}
+I dette mini-projekt er problemet om en flyvemaskinekø i en lufthavn blevet introduceret.
+Denne lufthavn har blot én landingsbane, hvilket kan skabe problemer hvis der er mange fly.
+I dette projekt vil der blive konstrueret modeller for ankomsttiderne for flyene, samt den tid flyene tager for at lande.
+Der vil også blive simuleret en kø for de fly der skal vente i luften for at lande.
+Til slut vil resultaterne for simulationerne blive diskuteret, og på baggrund af disse resultater vil der blive givet en anbefaling for, om hvorvidt lufthavnen skal tilføje en landingsbane mere, for at kunne kapere en 5\% stigning af antallet af fly om dagen hvert år.
+
+\section{Problemanalyse}
+Som nævnt har den givne lufthavn blot én landingsbane, hvilket kan skabe kø. Opgivet er data for en "typsik" dag, hvilket inkluderer tiden mellem ankomster (i sekunder) og landingstider (i sekunder).
+I Tabel \ref{tabel:intro_data} ses et udsnit af denne data.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{ c c c c c}
+		\cline{1-2} \cline{4-5}
+		Inter-arrival time [s]	&	Number of aircraft	&	\quad	&	Landing duration [s]	&	Number of aircraft	\\
+		\cline{1-2} \cline{4-5}
+		$0 - 59$								&	$44$								&				&	$0 - 30$							&	$0$									\\
+		$60 - 119$							& $34$								&				&	$31 - 60$							&	$16$								\\
+		$120 - 179$							& $27$								&				&	$61 - 90$							&	$33$								\\
+		$180 - 239$							&	$22$								&				&	$91 - 120$						&	$61$								\\
+		$240 - 299$							& $16$								&				&	$121 - 150$						&	$41$								\\
+		$\vdots$								& $\vdots$						&				&	$\vdots$							&	$\vdots$						\\
+		\cline{1-2} \cline{4-5}
+	\end{tabular}
+	\caption{Udsnit af det givne data for antallet af fly og tiden mellem deres ankomster og deres landingstid. Alt data kan ses i opgavebeskrivlesen.} \label{tabel:intro_data}
+\end{table}
+
+Dette data beskriver en "typisk" dag for lufthavnen. Hvis antallet af fly summeres, giver det i begge tilfælde 200 fly. Lufthavnen forventer en årlig stigning på 5\% af antallet af fly der lander på én dag. Det må betyde at der på en typisk dag det første år lander 200 fly, mens der på en typisk dag i året efter lander 210 fly. Når denne stigning fortsætter vil flyene naturligt ankomme hurtigere efter hinanden, hvilket betyder en større kø og mere ventetid for flyene. Da skal det undersøges om denne ventetid kan reduceres ved at udvide lufthavnen med endnu en landingsbane, eventuelt efter nogle år, eller om lufthavnen fortsat kan klarer presset mange år ude i fremtiden.
+
+For at komme med en anbefaling til lufthavnsbestyrelsen skal denne data først analyseres. På baggrund af denne analyse skal der opstilles en model for at simulere flyankomster og landingstider på en given dag i et givent år.
+Denne givne dag skal da afvikles i en køsimulering (både med én og to landingsbaner), og ventetiden vil da kunne simuleres.
+Disse simuleringer skal køres for mange dage i et givent år, og igen for mange forskellige år for at udregne en gennemsnitelig ventetid for en dag i et år.
+
+I dette projekt vil der blive brugt programmeringssproget Python da det er et anerkendt og meget populært sporg. Desuden bliver det brugt af både programmøre, videnskabsmænd og matematikere. Python en et Open-Source programmeringssporg hvor der eksistere mange forskellige pakker der kan hentes og benyttes gratis. Dsuden er Pyhton letlæselig sammenlignet med mange andre programmeringssprog (KILDE) og i 2019 rangerede det som nummer et på \textsc{IEEE}'s rangliste over de bedste sprog i verden. (KILDE)
+
+Da må problemformuleringen for programmet der skal køre simuleringen være,
+
+\begin{center}
+	\textit{lav en model for det givne data og skriv et progam i Python der skal simulere mange dage i de forskellige år og som kan udregne den da gennemsnittelige ventetid for de forskellige år.
+	På baggrund af disse resulater skal der kunne blive givet en anbefaling til lufthavnsbestyrelsen om hvorvidt de skal udvide lufthavnen med endnu en landingsbane.}
+\end{center}
