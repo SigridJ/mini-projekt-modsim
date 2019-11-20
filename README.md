@@ -1,4 +1,4 @@
-# LaTeX Projektskabelon
+# Mini-projekt MODSIM
 
 Dette repository indeholder en LaTeX-skabelon lavet specielt til studerende på AAUs Institut for Matematiske Fag.
 
