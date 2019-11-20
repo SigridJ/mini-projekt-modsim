@@ -10,3 +10,4 @@ For at komme i gang:
   4. Udfyld detaljerne, og sæt det nye repository til **Private**
   5. Gå til **Settings → Collaborators** og tilføj dine gruppemedlemmer
   6. Klon repository'et til din computer og begynd at skrive!
+Hej fra Danny
