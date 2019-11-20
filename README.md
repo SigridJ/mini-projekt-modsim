@@ -12,3 +12,4 @@ For at komme i gang:
   6. Klon repository'et til din computer og begynd at skrive!
 Hej fra Danny
 Hej igen
+Hej endnu en gang
