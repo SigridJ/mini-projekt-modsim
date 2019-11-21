@@ -100,3 +100,8 @@
 \def\tableautorefname{Tabel}
 \def\algorithmautorefname{Algoritme}
 \def\lstinputlistingautorefname{Kildekode}
+
+% Instillinger for kode i tekstlinjer
+\usepackage{xcolor}
+\definecolor{light-gray}{gray}{0.95}
+\newcommand{\code}[1]{\colorbox{AAUgrey4}{{\scriptsize \texttt{#1}}}}
