@@ -1,5 +1,5 @@
 \chapter{Modellering}
-Dette er moddelleringsafsnittet.
+I projektet er der opgivet data for en "typisk" dag i form af et skema over hyppigheden af ankomsttid mellem flyene og hyppigheden af landingsvarigheden for flyene. For at kunne lave en simulering af flyankomster i en dag i lufthavnen er det nødvendigt at analysere denne data, og eventuelt finde en model til at generere tiderne, som stemmer overens med den "typiske" dag.
 \section{Ankomsttider}
 Givet er data for hvor mange fly der ankommer inden for et specifikt interval efter det forrige fly. På baggrund af dette kan der genereres ankomsttider for en specifik dag det første år, og tiden det tager for alle fly at ankomme kan da beregnes.
 
@@ -7,7 +7,7 @@ En måde at gøre det på er at generere først $44$ tilfældige tal mellem $0 -
 I filen \code{arrival\_times.py} kan man se et \textsc{Python}-program der gør netop dette, og som printer antallet af fly og tiden i alt i timer.
 Køres dette et par gange vil resultatet være at der alle gange er 200 fly, men at tiden i alt vil varriere mellem $12 - 13.5$ timer.
 
-Da tiden i alt varrierer vælges det at køre programmet mange gange for da at tage gennemsnittet af alle kørsler.
+Da tiden i alt varrierer, vælges det at køre programmet mange gange for da at tage gennemsnittet af alle kørsler.
 I filen \code{arrival\_times\_mean.py} findes et \textsc{Python}-program der udfører netop dette, og som printer gennemsnittet. Køres dette program $100,000$ gange (ved at sætte variablen \code{repetitions = 100000}) fås et gennemsnit på $12.9$ timer.
 
 \subsection{Model for ankomsttider} \label{chap:model_arrival_times}
@@ -53,4 +53,4 @@ Det har i projektet ikke været muligt at finde en model der passer på det givn
 Desuden afviger landingsvarighederne sig fra ankomsttiderne, da landingsvarigheden direkte kan blive påvirket af udefrakommende paramenter.
 Landingsvarigheden for et fly vil ikke bare være et tilfældigt tal inden for et tidsinterval, men vil kunne blive påvirket af eksempelvis den hastighed eller acceleration flyet lander med. 
 
-Da der ikke er blevet fundet en model der passer til det givne data, må det blive nødvendigt at bruge netop de givne tidsintervaller til at generere tilfældige landingsvarigheder for en specifik dag. Den specifikke metode brugt i dette projekt beskrives i kapitel \ref{chap:program}.
+Da der ikke er blevet fundet en model der passer til det givne data, må det blive nødvendigt at bruge netop de givne tidsintervaller til at generere tilfældige landingsvarigheder for en specifik dag. Den specifikke metode brugt i dette projekt beskrives i afsnit \ref{chap:landing_durations} i kapitel \ref{chap:program}.
