@@ -1,8 +1,10 @@
 \chapter{Køsimulering} \label{chap:queue}
-Når flyene ankommer kan der opstå et tilfælde hvor et fly ankommer mens alle landingabaner er optagede. I det tilfælde skal flyet der ikke endnu kan lande forblive i luften. Dette er et eksempel på et køproblem. Den simpleste måde at løse problemet er altid at lade den forreste i køen lande, når en landingsbane bliver ledig.
+Når flyene ankommer kan der opstå et tilfælde hvor et fly ankommer mens alle landingabaner er optagede.
+I det tilfælde skal flyet der endnu ikke kan lande forblive i luften.
+Dette er et eksempel på et køproblem. Den simpleste måde at løse problemet er altid at lade den forreste i køen lande, når en landingsbane bliver ledig.
 
 Der er mange tilgange til at simulere en kø. I projektet blev der brugt (KILDE) som inspiration til en køsimulering med både én og flere landingsbaner.
-I Figur \ref{fig:queue_flowchart} på næste side ses et flowchart som illustrerer den køsimulation der bliver brug i dette projekt.
+I Figur \ref{fig:queue_flowchart} på næste side ses et flowchart som illustrerer den køsimulation der bliver brugt i dette projekt.
 
 \begin{figure}
 	\centering
@@ -13,7 +15,8 @@ I Figur \ref{fig:queue_flowchart} på næste side ses et flowchart som illustrer
 \end{figure}
 
 I starten af simuleringen sættes en variabel hvor den samlede tid der er gået lig nul.
-Desuden sættes også den samlede ventetid lig nul, og alle landingsbanerne sættes til at være tomme. Derefter startes en while-løkke, som først sluttet når alle fly har landet.
+Desuden sættes også den samlede ventetid lig nul, og alle landingsbanerne sættes til at være tomme. Derefter startes en while-løkke, som først slutter når alle fly er landet.
+
 I while-løkken tjekkes der for to centrale begivenheder (events).
 Den ene begivenhed er at et nyt fly ankommer til lufthavnen, mens den anden begivenhed er at en landingsbane bliver ledig.
 Hvis et nyt fly ankommer, skal det enten lande på en ledig landingsbane, eller også placeres bagerst i køen.
