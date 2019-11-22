@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
 I starten af denne funktion defineres først de to vaiabler \code{years} og \code{runways}. Disse kan ændres alt efter hvor mange år simulationen skal simulere, og hvor mange landingsbaner lufthavnen har.
 Derefter kaldes funktionen \code{simulate()}, hvis output bliver gemt i listen \code{avg\_wait}.
-Denne liste består af den gennemsnittelige ventetid per fly for en dag i et år, og dens længde er da netop antallet af år, altså den værdi der er gemt i \code{years}.
+Denne liste består af den gennemsnittelige ventetid per fly for en dag i et år, og listens længde er da netop antallet af år, altså den værdi der er gemt i \code{years}.
 Til slut kaldes funktionen \code{write\_results\_to\_file()}, der skriver disse resultater til en fil.
 
 \section{Simulate-funktionen}
@@ -62,7 +62,7 @@ For-løkken gentages det antal gange køsimuleringen skal køres for et år, hvi
 For hver gentagelse skal der genereres en ny tidsplan, og en ny køsimulerign skal køres med denne tidsplan.
 Til slut returneres gennemsnittet af den gennemsnittelige ventetid per fly for en dag.
 
-En tidsplan er en liste af tubler, hvor der er én tubel for hvert fly der skal lande den dag, og hvor tublerne er ordnede efter ankomsten.
+En tidsplan er en liste af tubler, hvor der er én tubel for hvert fly der skal lande den dag, og hvor tublerne er ordnet efter ankomsten.
 En tubel består af et flys ankomsttid (i sekunder), og flyets landingsvarighed (i sekunder).
 Ankomsttid betyder her det præcise tidspunkt flyet ankommer, og er altså ikke en "inter-arrival time".
 I tidsplanen er eksempelvis værdien \code{schedule[0][1]} lig landingsvarigheden for det første fly.
@@ -72,14 +72,14 @@ Den første kalder funktionen \code{genera} \code{te\_arrival\_times}, som bruge
 Derefter bliver funktionen \code{generate\_landing\_durations} kaldt, der genererer en liste over landingsvarigheder, og til slut returneres de to lister "zippet" sammen.
 
 \section{Generering af landingsvarigheder} \label{chap:landing_durations}
-Siden hvert fly har en tid det tager for det at lande, skal der genereres en liste af landingsvarighed, hvor hver eneste flys landingsvarighed er gemt.
+Siden hvert fly har en tid det tager for det at lande, skal der genereres en liste af landingsvarighed, hvor landingsvarighed for hvert fly er gemt.
 
 I det første år lander der 200 fly om dagen. Fra det givne data over en "typisk" dag fås det at der ud af de 200 fly er 16 fly der tager mellem $31 - 60$ sekunder at lande.
 I det første år kan landingstiderne da genreres på det måde, at der bliver trukket 16 tilfældige tal mellem $31 - 60$ i første omgang, og derefter bliver trukket et antal nye tider inden for det interval antallet tilhører.
 Til slut kan listen af alle disse tider blandes.
 
-Når antallet af fly stiger bliver det dog lidt vanskligere.
-Da kan der med fordel udregnes frekvensen af hyppigheden af fly hvis landingsvarighed falder inden for de forskellige intervaller.
+Når antallet af fly stiger, bliver det dog lidt vanskligere.
+Da kan der med fordel udregnes frekvensen af hyppigheden af fly, hvis landingsvarighed falder inden for de forskellige intervaller.
 Den kumulerede frekvens kan da udregnes for hvert af intervallerne.
 Hvis der nu trækkes et tilfældigt tal mellem $0-1$ må det ligge mellem en af to kumulerede frekvenser, og da kan der trækkes en tilfældig landingsvarighed i det tidsinterval frekvensen svarer til.
 Denne metode kan gentages for alle fly uanset antallet, og fordeligen af flyenes landingsvarighed vil da forblive den samme som det data der er blevet givet for en "typisk" dag. 
@@ -109,7 +109,7 @@ def generate_landing_durations(planes):
 \end{lstlisting}
 
 I funktionen bliver det givne data for landingsvarigheden først gemt i listen \code{data}. Listen \code{model} består af lister, hvor det første element er den kumulerede frekvens, det næste er den mindste værdi i tidsintervallet, og den sidste den største værdi i tidsintervallet.
-For hvert datapunkt i \code{data} (med undtagelse af det første) bliver der da udregnet en kumuleret frekvens og en min og max værdi for tidsintervallet, og disse gemmes i \code{model}. 
+For hvert datapunkt i \code{data} (med undtagelse af det første) bliver der da udregnet en kumuleret frekvens og en mindste og største værdi for tidsintervallet, og disse gemmes i \code{model}. 
 Derefter trækkes der det samme antal tilfældige tal mellem $0-1$ som der er fly, og disse gemmes i \code{percent\_list}.
 For hver af disse værider bliver det tjekket hvilket tidsinterval de matcher, og der bliver da trukket et tilfældigt tal i dette interval, som bliver gemt i listen \code{landing\_durations}.
 Til slut returneres denne liste.

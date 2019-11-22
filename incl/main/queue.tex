@@ -1,7 +1,7 @@
 \chapter{Køsimulering} \label{chap:queue}
-Når flyene ankommer kan der opstå et tilfælde hvor et fly ankommer mens alle landingabaner er optagede.
-I det tilfælde skal flyet der endnu ikke kan lande forblive i luften.
-Dette er et eksempel på et køproblem. Den simpleste måde at løse problemet er altid at lade den forreste i køen lande, når en landingsbane bliver ledig.
+Når flyene ankommer kan der opstå et tilfælde, hvor et fly ankommer mens alle landingabaner er optaget.
+I dette tilfælde skal flyet, der endnu ikke kan lande, forblive i luften.
+Dette er et eksempel på et køproblem. Den simpleste måde at løse problemet på, er altid at lade den forreste i køen lande, når en landingsbane bliver ledig.
 
 Der er mange tilgange til at simulere en kø. I projektet blev der brugt (KILDE) som inspiration til en køsimulering med både én og flere landingsbaner.
 I Figur \ref{fig:queue_flowchart} på næste side ses et flowchart som illustrerer den køsimulation der bliver brugt i dette projekt.
@@ -14,18 +14,18 @@ I Figur \ref{fig:queue_flowchart} på næste side ses et flowchart som illustrer
 	\caption{Flowchat der illustrer en køsimulering} \label{fig:queue_flowchart}
 \end{figure}
 
-I starten af simuleringen sættes en variabel hvor den samlede tid der er gået lig nul.
+I starten af simuleringen sættes en variabel, hvor den samlede tid der er gået, lig nul.
 Desuden sættes også den samlede ventetid lig nul, og alle landingsbanerne sættes til at være tomme. Derefter startes en while-løkke, som først slutter når alle fly er landet.
 
 I while-løkken tjekkes der for to centrale begivenheder (events).
 Den ene begivenhed er at et nyt fly ankommer til lufthavnen, mens den anden begivenhed er at en landingsbane bliver ledig.
-Hvis et nyt fly ankommer, skal det enten lande på en ledig landingsbane, eller også placeres bagerst i køen.
+Hvis et nyt fly ankommer, skal den enten lande på en ledig landingsbane, eller også skal den placeres bagerst i køen.
 Hvis en landingsbane bliver ledig, skal det næste fly i køen lande, hvis ikke køen er tom, eller også skal landingsbanen opdateres som tom, hvis der ingen fly er i køen.
-Hvis et fly har været i køen, skal den tid det har ventet i køen gemmes når det får lov til at lande. Denne ventetid bliver plusset til den samlede ventetid, og til sidst i simuleringen vil den gennemsnittelige ventetid per fly blive returneret. 
-Hvis et et fly ikke har været i kø, har det ikke haft nogen ventetid, og da er det ikke nødvendigt at opdatere den samlede ventetid.
+Hvis et fly har været i køen, skal den tid det har ventet i køen gemmes når det får lov til at lande. Denne ventetid bliver plusset til den samlet ventetid, og til sidst i simuleringen vil den gennemsnittelige ventetid per fly blive returneret. 
+Hvis et fly ikke har været i kø, har det ikke haft nogen ventetid, og det er derfor ikke nødvendigt at opdatere den samlet ventetid.
 
-Denne simulation virker for ethvert antal af landingsbaner.
-Derfor er det den samme der vil blive brugt både til tilfældet hvor der er én, og hvor der er to landingsbaner.
+Denne simulation virker for ethvert antal landingsbaner.
+Derfor er det den samme simulation der vil blive brugt både til tilfældet hvor der er én, og hvor der er to landingsbaner.
 
 Køsimuleringen er en del af det større program der udregner den gennemsnittelige ventetid per fly på en dag hvert år.
-Dette program kan findes som filen \code{airplanes.py}, og køsimuleringen er en funktion der heri starter på linje 45 kaldet \code{sim\_day()}.
+Dette program kan findes som filen \code{airplanes.py}, og køsimuleringen er en funktion der heri starter på linje 45 kaldet \code{sim\_day}.
