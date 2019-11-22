@@ -5,22 +5,20 @@
 
 % Dokumenttypen 'book' er valgt pga. dens mange fleksible indstillinger
 % Se https://tex.stackexchange.com/a/36989/118167
-\documentclass[11pt,a4paper,twoside,openright,danish]{book}
+\documentclass[11pt,a4paper,oneside,openright,danish]{book}
 
 % Variabler, som bruges til automatisk at indsætte titel, forfattere, osv. på
 % forsiden og titelbladet.
-\def \projecttitle       {Projekttitel}
-\def \projectsubtitle    {Projektundertitel}
+\def \projecttitle       {MODSIM Miniprojekt}
+\def \projectsubtitle    {Lufthavnskøproblemet}
 \def \projecttheme       {Projekttema}
 \def \projectdegree      {Matematik}  % eller Matematik-Økonomi/Teknologi
-\def \projectperiod      {Efterårssemesteret 20XX}
-\def \projectnumber      {P1}
-\def \projectgroup       {X123}
+\def \projectperiod      {Efterårssemesteret 2019}
+\def \projectnumber      {MODSIM}
+\def \projectgroup       {C220 C}
 \def \projectauthors     {
-  Sigrid\\
-  Projektforfatter 2\\
-  Projektforfatter 3\\
-  Projektforfatter 4
+  Sigrid Schrøder Jensen\\
+  Daniel Bursac Hasanovic
   % ...
 }
 \def \projectsupervisors {
@@ -43,7 +41,7 @@
 % indholdsfortegnelsen.
 \frontmatter
 \include{incl/misc/frontpage}
-\include{incl/misc/titlepage}
+% \include{incl/misc/titlepage}
 \include{incl/misc/contents}
 
 % Dokumentets 'main matter' (hovedindhold) er der, hvor det meste indhold skal
@@ -69,6 +67,7 @@
   % \include{incl/app/appendix1}
   % \include{incl/app/appendix2}
   % ..
+	\include{incl/app/programs}
 \end{appendices}
 
 % Dokumentets 'back matter' er til ekstra ting som f.eks. litteraturlisten.

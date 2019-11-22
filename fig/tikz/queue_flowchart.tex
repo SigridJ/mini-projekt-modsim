@@ -1,7 +1,7 @@
-\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
-\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, text width=4cm, draw=black, fill=blue!30]
-\tikzstyle{process} = [rectangle, minimum width=4cm, minimum height=1cm, text centered, text width=4cm, draw=black, fill=orange!30]
-\tikzstyle{decision} = [diamond, width=2cm, height=1cm, text centered, text width=2cm, draw=black, fill=green!30]
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=AAUgrey3]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, text width=4cm, draw=black, fill=AAUteal!30]
+\tikzstyle{process} = [rectangle, minimum width=4cm, minimum height=1cm, text centered, text width=4cm, draw=black, fill=AAUgrey4]
+\tikzstyle{decision} = [diamond, width=2cm, height=1cm, text centered, text width=2cm, draw=black, fill=AAUblue2!30]
 \tikzstyle{arrow} = [thick,->,>=stealth]
 
 \begin{tikzpicture}[node distance=2cm]
@@ -23,8 +23,8 @@
 	\node (stop) [startstop, below of=out1] {Stop};
 
 	\node (dec4an) [above of=dec4, yshift=1cm];
-	\node (dec1ana) [below of=dec4, yshift=-2cm, xshift=-4cm];
-	\node (out1an) [above of=out1, xshift=18cm, yshift=-0.7cm];
+	\node (dec1ana) [below of=dec4, yshift=-2cm, xshift=-2.6cm];
+	\node (out1an) [above of=out1, xshift=17.5cm, yshift=-0.7cm];
 	\node (nej1) [below of=dec4, anchor=east, yshift=-1cm] {Nej};
 	\node (ja1) [right of=dec1, anchor=south] {Ja};
 	
