@@ -163,12 +163,13 @@ def sim_day(runways, schedule):
             next_arrival = schedule[cur_flight][0]
         if next_arrival <= next_lane_event(lanes) or (next_lane_event(lanes) == -1 and cur_flight < len(schedule)):
             t = next_arrival
-            for index, lane in enumerate(lanes):
-                if lane == -1:
-                    lanes[index] = t + schedule[cur_flight][1]
-                    break
             if -1 != min(lanes):
                 queue.append(schedule[cur_flight])
+            else:
+                for index, lane in enumerate(lanes):
+                    if lane == -1:
+                        lanes[index] = t + schedule[cur_flight][1]
+                        break
             cur_flight += 1
         if next_lane_event(lanes) > -1:
             for index, lane in enumerate(lanes):
@@ -207,17 +208,19 @@ def write_results_to_file(avg_wait, years):
     f = open(f"{years}Y{runways}K.txt", "w")
     f.write(years_str + "\n" + results + "\n")
     f.close()
-
+    print(f"Writing results to file \"{years}Y{runways}K.txt\"")
 
 # Run the simulation and write the results to a file
 if __name__ == "__main__":
     years = 15
-    runways = 2
+    runways = 1
     avg_wait = simulate(runways, years, 300)
     write_results_to_file(avg_wait, years)
 \end{lstlisting}
 
 \section{plot.py}
+Dette program tager et antal filer (genereret med \code{airplanes.py}) som input i kommandolinjen, og plotter data fra filerne i et histogram.
+Histogrammet gemmes som en \textsc{PNG}-fil.
 
 \begin{lstlisting}[language=Python, caption={plot.py}]
 import argparse
@@ -284,7 +287,8 @@ def plot(data, labels, num_of_runways):
     ax.set_xlabel('Years')
     ax.legend()
     fig.tight_layout()
-    plt.savefig(f"plot_{data[0][0][-1]}Y_{str(len(data))}files")
+    plt.savefig(f"plot_{data[0][0][-1]}Y_{str(len(data))}files.png")
+    print(f"Saving plot as file \"plot_{data[0][0][-1]}Y_{str(len(data))}files.png\"")
 
 # Main function
 if __name__ == "__main__":
