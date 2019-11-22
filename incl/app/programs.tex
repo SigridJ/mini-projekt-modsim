@@ -1,0 +1,298 @@
+\chapter{Programmer}
+I dette appendiks er alle prgrammer der er blevet nævt i rapporten indsat som kildekode.
+Deres funktionanlitet er beskrevet kort i starten af hver afsnit.
+
+\section{arrival\_times.py}
+Dette program udregner summen af alle ankomsttider mellem flyene for en tilfædig dag det første år, ved at gøre brug af de givne data.
+
+\begin{lstlisting}[language=Python, caption={arrival\_times.py}]
+import random
+# The given data
+inter_arrival_time_num = [44, 34, 27, 22, 16, 13, 10, 8, 6, 5, 4, 3, 2, 2, 1, 1, 1, 0, 1, 0]
+
+# For each time interval, generate the inter-arrival time number amount of inter-arrival times in this interval
+inter_arrival_time = []
+for index, time in enumerate(range(0, 1200, 60)):
+    for i in range(inter_arrival_time_num[index]):
+        inter_arrival_time.append(random.randint(time, time + 59))
+# Print results - the number of airplanes (which is the length of inter_arrival_times, and the sum of inter-arrival times in hours
+print(f"Numnber of airplanes: {len(inter_arrival_time)}")
+print(f"Hours in total: {round(sum(inter_arrival_time) / 3600.0, 2)}")
+\end{lstlisting}
+
+\section{arrival\_times\_mean.py}
+Dette program gentager funktionaliteten fra \code{arrival\_times.py} mange gange, og printer gennemsnittet.
+
+\begin{lstlisting}[language=Python, caption={arrival\_times\_mean.py}]
+import random
+repetitions = 1000
+
+# From arrival_times.py:
+def arrival_times():
+    inter_arrival_time_num = [44, 34, 27, 22, 16, 13, 10, 8, 6, 5, 4, 3, 2, 2, 1, 1, 1, 0, 1, 0]
+    inter_arrival_time = []
+    for index, time in enumerate(range(0, 1199, 60)):
+        for i in range(inter_arrival_time_num[index]):
+            inter_arrival_time.append(random.randint(time, time + 59))
+    return sum(inter_arrival_time)
+
+# Calculate the mean after repeating the program many times
+mean = 0
+for r in range(repetitions):
+    mean += arrival_times()
+mean /= float(repetitions)
+# Print the mean
+print(f"Average hours in total: {round(mean / 3600.0, 3)}")
+\end{lstlisting}
+
+\section{plot\_inter\_arrival\_time\_model.py}
+Dette program gentager mange gange at bruge modellen at generere ankomsttider, udregne "inter-arrival times" og optælle hyppigheden i de givne intervaller, og tager da gennemsnittet af hyppighederne.
+Desse gennemsnit bliver til slut plottet.
+
+\begin{lstlisting}[language=Python, caption={plot\_inter\_arrival\_time\_model.py}]
+import random
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate a list of the number of inter-arrival times
+def generate_inter_arrival_times_num(planes):
+    # Genreate arrival times using the model
+    mylist = [random.randint(0, 13 * 3600) for i in range(planes)]
+    mylist.sort()
+    # Generate the inter-arrival times
+    inter_times = [mylist[0]]
+    for index in range(len(mylist[1:])):
+        inter_times.append(mylist[index + 1] - mylist[index])
+    # Calculate the number of inter-arrival times in the specific intervals
+    inter_arrival_times_num = []
+    for t in range(0, 1200, 60):
+        number = 0
+        for time in inter_times:
+            if t <= time and time < t + 59:
+                number += 1
+        inter_arrival_times_num.append(number)
+    # Return the list of the number of inter-arrival times
+    return inter_arrival_times_num
+
+# Take the mean of a list generated with a function (with one argument) when run many times
+def mean_list(repeat, function, arg):
+    mean = [0 for i in range(len(function(arg)))]
+    for i in range(repeat):
+        mean = map(lambda x, y: x + y, mean, function(arg)) 
+    return [x/float(repeat) for x in mean]
+
+# Generate the mean of the number of inter-arrival times
+repetitions = 20000
+planes = 200
+performance = mean_list(repetitions, generate_inter_arrival_times_num, planes)
+print(performance)
+
+# Plot the data in a bar graph
+labels = [str(start) + "-" + str(start + 59) for start in range(0, 1200, 60)]
+objects = tuple(labels)
+y_pos = np.arange(len(objects))
+plt.bar(y_pos, performance, align='center', alpha=1)
+plt.xticks(y_pos, objects, rotation=90)
+plt.ylabel('Number of planes')
+plt.xlabel('Inter-arrival time [seconds]')
+plt.title(f'Number of inter-arrival times in the given intervals')
+plt.tight_layout()
+plt.savefig(f'mean_number_of_inter_arrival_times_{repetitions}_{planes}.png')
+\end{lstlisting}
+
+\section{airplanes.py}
+Dette program er det centrale program i projektet.
+Funktionaliteten gennemsås i Kapitel \ref{chap:program}.
+Programmet kører mange køsimuleringer og udregner den genenmsnittelige ventetid per fly.
+
+\begin{lstlisting}[language=Python, caption={airplanes.py}]
+import random
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Genreate a list of landing durations
+def generate_landing_durations(planes):
+    data = [0, 16, 33, 61, 41, 25, 10, 8, 6]
+    min_ = 0
+    max_ = 30
+    model = [[0.0, 0, 30]]
+    for index, num in enumerate(data[1:]):
+        percent = float(num) / planes + model[index][0]
+        min_ = 1 + max_
+        max_ = 29 + min_
+        model.append([percent, min_, max_])
+    percent_list = [random.random() for i in range(planes)]
+    landing_durations = []
+    for percent in percent_list:
+        for index in range(len(model) - 1):
+            if model[index][0] < percent and percent <= model[index + 1][0]:
+                landing_durations.append(random.randint(model[index + 1][1], model[index + 1][2]))
+                break
+    return landing_durations
+
+# Generate a list of arrival times
+def generate_arrival_times(planes):
+    arrival_times = [random.randint(0, 13 * 3600) for i in range(planes)]
+    arrival_times.sort()
+    return arrival_times
+
+# Generate schedule that contains a list of lists.
+def generate_schedule(planes):
+    arrival_times = generate_arrival_times(planes)
+    landing_durations = generate_landing_durations(planes)
+    return list(zip(arrival_times, landing_durations))
+
+def next_lane_event(lanes):
+    next_lane = max(lanes)
+    for lane in lanes:
+        if lane < next_lane and lane != -1:
+            next_lane = lane
+    return next_lane
+
+# Run simulation for one day
+def sim_day(runways, schedule):
+    t = 0
+    cur_flight = 0
+    lanes = [-1 for runway in range(runways)]
+    queue = []
+    wait = 0.0
+    while(cur_flight < len(schedule) or queue or max(lanes) > -1):
+        if cur_flight >= len(schedule):
+            next_arrival = 100000000
+        else:
+            next_arrival = schedule[cur_flight][0]
+        if next_arrival <= next_lane_event(lanes) or (next_lane_event(lanes) == -1 and cur_flight < len(schedule)):
+            t = next_arrival
+            for index, lane in enumerate(lanes):
+                if lane == -1:
+                    lanes[index] = t + schedule[cur_flight][1]
+                    break
+            if -1 != min(lanes):
+                queue.append(schedule[cur_flight])
+            cur_flight += 1
+        if next_lane_event(lanes) > -1:
+            for index, lane in enumerate(lanes):
+                if lane < next_arrival and lane == next_lane_event(lanes):
+                    t = lane
+                    if queue:
+                        wait += t - queue[0][0]
+                        lanes[index] = t + queue[0][1]
+                        queue.pop(0)
+                    else:
+                        lanes[index] = -1
+    return wait/len(schedule)
+
+# Run one day's simulationen sim_per_year times
+def sim_year(runways, planes, sim_per_year):
+    sum_of_avg_wait = 0
+    for sim in range(sim_per_year):
+        schedule = generate_schedule(planes)
+        sum_of_avg_wait += sim_day(runways, schedule)
+    return sum_of_avg_wait/float(sim_per_year)
+
+# Run the simulation and calculate number of planes each day in the year
+def simulate(runways, years, sim_per_year):
+    planes = 200
+    avg_wait = []
+    for i in range(years):
+        avg_wait.append(sim_year(runways, round(planes), sim_per_year))
+        planes *= 1.05
+    return avg_wait
+
+# Write to file
+def write_results_to_file(avg_wait, years):
+    avg_wait = [round(avg, 2) for avg in avg_wait]
+    results = ", ".join(map(str, avg_wait))
+    years_str = ", ".join(map(str, range(1, years + 1)))
+    f = open(f"{years}Y{runways}K.txt", "w")
+    f.write(years_str + "\n" + results + "\n")
+    f.close()
+
+
+# Run the simulation and write the results to a file
+if __name__ == "__main__":
+    years = 15
+    runways = 2
+    avg_wait = simulate(runways, years, 300)
+    write_results_to_file(avg_wait, years)
+\end{lstlisting}
+
+\section{plot.py}
+
+\begin{lstlisting}[language=Python, caption={plot.py}]
+import argparse
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+import sys
+
+def close_files():
+    for f in args.file:
+        f.close()
+
+# Turn a line in a file into a list of the type of data the input function returns
+def read_line(f, line_num, function):
+    f.seek(0)
+    lines = f.readlines()
+    try:
+        mylist = list(map(function, lines[line_num].strip().split(', ')))
+    except ValueError:
+        print("Error: Make sure the files were generated using airplanes.py.")
+        close_files()
+        sys.exit()
+    return mylist
+
+# Get data from files
+def get_data_from_files():
+    data = [[] for i in range(len(args.file))]
+    num = [] # number of runways
+    for index, f in enumerate(args.file):
+        # Turn line into a list
+        data[index].append(read_line(f, 0, str))
+        data[index].append(read_line(f, 1, float))
+        # Get the number of runways as str from the filename
+        name = os.path.basename(f.name)
+        i = name.find("K")
+        num.append(name[i - 1])
+    close_files()
+    return data, num
+
+# Get the labels for the x-axis and check if the files match
+def get_labels(data):
+    labels = data[0][0]
+    for d in data[1:]:
+        if d[0] != labels:
+            print("Error: The files' labels are not compatible. Make sure the number of years in each file is the same.")
+            sys.exit()
+    return labels
+
+# Plot the data
+def plot(data, labels, num_of_runways):
+    x = np.arange(len(labels))
+    width = 0.35
+    
+    fig, ax = plt.subplots()
+    rects = []
+    for index, d in enumerate(data):
+        rects.append(ax.bar((x - width/2) + index*width/len(data), d[1], width, label=(num_of_runways[index] + " runways")))
+    
+    ax.set_ylabel('Average waiting time [s]')
+    ax.set_title('Average waiting time')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.set_xlabel('Years')
+    ax.legend()
+    fig.tight_layout()
+    plt.savefig(f"plot_{data[0][0][-1]}Y_{str(len(data))}files")
+
+# Main function
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Plot data from files in a bar graph')
+    parser.add_argument('file', type=argparse.FileType('r'), nargs='+')
+    args = parser.parse_args()
+
+    data, num_of_runways = get_data_from_files()
+    labels = get_labels(data)
+    plot(data, labels, num_of_runways)
+\end{lstlisting}

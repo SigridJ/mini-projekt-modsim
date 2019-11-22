@@ -19,9 +19,9 @@
 % Sidehoved og sidefod ---------------------------------------------------------
 % http://mirrors.dotsrc.org/ctan/macros/latex/contrib/fancyhdr/fancyhdr.pdf
 \fancyhead{}                            % ryd standardindhold
-\fancyhead[LE,RO]{Group \projectgroup}  % venstre på lige sider, højre på ulige
-\fancyhead[RE]{\leftmark}               % højre på ulige sider
-\fancyhead[LO]{\rightmark}              % venstre på ulige sider
+\fancyhead[R]{Group \projectgroup}      % venstre på lige sider, højre på ulige
+% \fancyhead[RE]{\leftmark}             % højre på ulige sider
+\fancyhead[L]{\leftmark}                % venstre på ulige sider
 \fancyfoot{}                            % ryd standardindhold
 \fancyfoot[CE,CO]{\thepage}             % centrerede sidetal
 \pagestyle{fancy}                       % aktiver fancy stil
@@ -100,3 +100,8 @@
 \def\tableautorefname{Tabel}
 \def\algorithmautorefname{Algoritme}
 \def\lstinputlistingautorefname{Kildekode}
+
+% Instillinger for kode i tekstlinjer
+\usepackage{xcolor}
+\definecolor{light-gray}{gray}{0.95}
+\newcommand{\code}[1]{\colorbox{AAUgrey4}{{\scriptsize \texttt{#1}}}}

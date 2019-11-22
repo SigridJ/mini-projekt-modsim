@@ -1,0 +1,53 @@
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=AAUgrey3]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, text width=4cm, draw=black, fill=AAUteal!30]
+\tikzstyle{process} = [rectangle, minimum width=4cm, minimum height=1cm, text centered, text width=4cm, draw=black, fill=AAUgrey4]
+\tikzstyle{decision} = [diamond, width=2cm, height=1cm, text centered, text width=2cm, draw=black, fill=AAUblue2!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\begin{tikzpicture}[node distance=2cm]
+	\node (start) [startstop] {Start};
+	\node (pro1) [process, below of=start] {Sæt tiden og ventetiden lig nul, samt lad alle landingsbaner være tomme};
+	\node (dec1) [decision, below of=pro1, yshift=-1cm] {Er alle fly landet?};
+	\node (pro2) [process, below of=dec1, yshift=-1cm] {Beregn den næste ankomsttid};
+	\node (dec2) [decision, below of=pro2, yshift=-1.5cm] {Er det næste event en ankomst?};
+	\node (pro3a) [process, right of=dec2, xshift=3cm] {Sæt tiden lig den næste ankomsttid};
+	\node (dec3a) [decision, right of=pro3a, xshift=3cm] {Er der en fri landingsbane?};
+	\node (pro4aa) [process, right of=dec3a, xshift=3cm] {Land flyet her og udregn den næste tid en landing er færdig for denne bane};
+	\node (pro4ab) [process, below of=dec3a, yshift=-1cm] {Placér flyet bagerst i køen};
+	\node (dec4) [decision, below of=dec2, yshift=-5cm] {Er det næste event at en landingsbane bliver fri?};
+	\node (pro5a) [process, right of=dec4, xshift=3cm] {Sæt tiden lig den næste tid til en landing er færdig};
+	\node (dec5a) [decision, right of=pro5a, xshift=3cm] {Er der fly i køen?};
+	\node (pro6aa) [process, right of=dec5a, xshift=3cm] {Tag det forreste fly ud af køen og land flyet her. Udregn den næste tid en landing er flrdig for denne bane, og opdater den samlede ventetid med ventetiden for dette fly};
+	\node (pro6ab) [process, below of=dec5a, yshift=-1cm] {Sæt landingsbanen til at være tom};
+	\node (out1) [io, below of=dec4, yshift=-4cm] {Udregn den gennemsnittelige ventetid og retuner denne};
+	\node (stop) [startstop, below of=out1] {Stop};
+
+	\node (dec4an) [above of=dec4, yshift=1cm];
+	\node (dec1ana) [below of=dec4, yshift=-2cm, xshift=-2.6cm];
+	\node (out1an) [above of=out1, xshift=17.5cm, yshift=-0.7cm];
+	\node (nej1) [below of=dec4, anchor=east, yshift=-1cm] {Nej};
+	\node (ja1) [right of=dec1, anchor=south] {Ja};
+	
+	\draw [arrow] (start) -- (pro1);
+	\draw [arrow] (pro1) -- (dec1);
+	\draw [arrow] (dec1) -- node[anchor=east] {Nej} (pro2);
+	\draw [arrow] (pro2) -- (dec2);
+	\draw [arrow] (dec2) -- node[anchor=south] {Ja} (pro3a);
+	\draw [arrow] (pro3a) -- (dec3a);
+	\draw [arrow] (dec3a) -- node[anchor=south] {Ja} (pro4aa);
+	\draw [arrow] (dec3a) -- node[anchor=east] {Nej} (pro4ab);
+	\draw [thick] (pro4aa) |- (dec4an);
+	\draw [thick] (pro4ab) |- (dec4an);
+	\draw [arrow] (dec2) -- node[anchor=east] {Nej} (dec4);
+	\draw [arrow] (dec4) -- node[anchor=south] {Ja} (pro5a);
+	\draw [arrow] (pro5a) -- (dec5a);
+	\draw [arrow] (dec5a) -- node[anchor=south] {Ja} (pro6aa);
+	\draw [arrow] (dec5a) -- node[anchor=east] {Nej} (pro6ab);
+	\draw [thick] (pro6aa) |- (dec1ana);
+	\draw [thick] (pro6ab) |- (dec1ana);
+	\draw [arrow] (dec1ana) |- (dec1);
+	\draw [thick] (dec4) |- (dec1ana);
+	\draw [thick] (dec1) -| (out1an);
+	\draw [arrow] (out1an) -| (out1);
+	\draw [arrow] (out1) -- (stop);
+\end{tikzpicture}

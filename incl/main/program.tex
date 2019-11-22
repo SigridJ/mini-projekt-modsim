@@ -1,0 +1,114 @@
+\chapter{Programmet} \label{chap:program}
+Det centrale program i dette projekt er en fil der er navngivet \code{airplanes.py}.
+Dette program tager ingen input, og er delt op i en main-funktion, og otte andre underfunktioner.
+Programmet udregner den gennemsnittelige ventetid per fly for en dag i alle år, og resultatet for hvert år bliver skrevet ud i en fil.
+
+De fire centrale funktioner vil her blive gennemgået.
+
+\section{Main-fuktionen}
+I Kildekode \ref{code:main} ses et udsnit af programmet, der netop indeholder main-funktionen.
+
+\begin{lstlisting}[language=Python, caption={Main-funktionen i airplanes.py}, label=code:main]
+# Run the simulation and write the results to a file
+if __name__ == "__main__":
+    years = 15
+    runways = 2
+    avg_wait = simulate(runways, years, 300)
+    write_results_to_file(avg_wait, years)
+\end{lstlisting}
+
+I starten af denne funktion defineres først de to vaiabler \code{years} og \code{runways}. Disse kan ændres alt efter hvor mange år simulationen skal simulere, og hvor mange landingsbaner lufthavnen har.
+Derefter kaldes funktionen \code{simulate()}, hvis output bliver gemt i listen \code{avg\_wait}.
+Denne liste består af den gennemsnittelige ventetid per fly for en dag i et år, og dens længde er da netop antallet af år, altså den værdi der er gemt i \code{years}.
+Til slut kaldes funktionen \code{write\_results\_to\_file()}, der skrives disse resultater til en fil.
+
+\section{Simulate-funktionen}
+Udsnittet af denne funktion ses i Kildekode \ref{code:simulate} herunder.
+
+\begin{lstlisting}[language=Python, caption={simulate-funktionen i airplanes.py}, label=code:simulate]
+# Run the simulation and calculate number of planes each day in the year
+def simulate(runways, years, sim_per_year):
+    planes = 200
+    avg_wait = []
+    for i in range(years):
+        avg_wait.append(sim_year(runways, round(planes), sim_per_year))
+        planes *= 1.05
+    return avg_wait
+\end{lstlisting}
+
+Funktionen tager tre input: Antallet af landingsbaner, antallet af år, og det antal simuleringer der skal køres for ét år.
+Listen \code{avg\_wait} skal bestå af resultaterne for simuleringerne, og hver gentagelse af for-løkken bliver funktionen \code{sim\_year} kaldt, hvis output skrives på en ny plads bagerst i listen.
+Derefter stiger antallet af fly med de 5\%.
+Til slut returneres \code{avg\_wait}.
+
+\section{Simulering af for et år}
+For at beregne et gennemsnit for ventetiden per fly på en dag for et år skal der køres mange simuleringer af en dag på det givne år.
+Funktionen \code{sim\_year} i programmet kan ses i Kildekode \ref{code:sim_year}.
+I løbet af denne funktion bliver funktionen \code{sim\_day} kaldt, og denne funktion består af den køsimulering der blev gennemgået i kapitel \ref{chap:queue}. 
+
+\begin{lstlisting}[language=Python, caption={sim\_year-funktionen i airplanes.py}, label=code:sim_year]
+# Run one day's simulationen sim_per_year times
+def sim_year(runways, planes, sim_per_year):
+    sum_of_avg_wait = 0    
+    for sim in range(sim_per_year):
+        schedule = generate_schedule(planes)
+        sum_of_avg_wait += sim_day(runways, schedule)
+    return sum_of_avg_wait/float(sim_per_year)
+\end{lstlisting}
+
+Funktionen \code{sim\_year} tager tre input, netop antallet af landingsbaner, antallet af fly dette år og antallet af simuleringer der skal køres for året.
+I variablen \code{sum\_of\_avg\_wait} bliver summen af hver gennemsnittelig ventetid per fly for en dag gemt.
+For-løkken gentages det antal gange køsimuleringen skal køres for et år, hvilket netop er det antal der er gemt i variablen \code{sim\_per\_year}.
+For hver gentagelse skal der genereres en ny tidsplan, og en ny køsimulerign skal køres med denne tidsplan.
+Til slut returneres gennemsnittet af den gennemsnittelige ventetid per fly for en dag.
+
+En tidsplan er en liste af tubler, hvor der er en tubel for hvert fly der skal lande den dag, og hvor tublerne er ordnede efter ankomsten. En tubel består af et flys ankomsttid (i sekunder), og flyets landingsvarighed (i sekunder).
+Ankomsttid betyder her det præcise tidspunkt flyet ankommer, og er altså ikke en "inter-arrival time".
+Da er eksempelvis værdien \code{schedule[0][1]} lig landingsvarigheden for det første fly.
+
+Funktionen \code{generate\_schedule} består blot af tre linjer.
+
+Den første kalder funktionen \code{generate\_arrival\_times}, som bruger modellen fra afsnit \ref{chap:model_arrival_times} til at generere en liste over alle ankomsttider.
+
+Derefter bliver funktionen \code{generate\_landing\_durations} kaldt, der genererer en liste over landingsvarigheder, og til slut returneres de to lister "zippet" sammen.
+
+\section{Generering af landingsvarigheder}
+For hvert fly har en tid det tager for det at lande, skal der genereres en liste af landingsvarighed, hvor hver eneste flys landingsvarighed er gemt.
+
+I det første år lander der 200 fly om dagen. Fra det givne data over en "typisk" dag fås det at der ud af de 200 fly er 16 fly der tager mellem $31 - 60$ sekunder at lande.
+I det første kan landingstiderne da genreres på det måde, at der bliver trukket 16 tilfældige tal mellem $31 - 60$ i første omgang, og derefter bliver trukket et antal nye tider inden for det interval antallet tilhører.
+Når antallet af fly stiger bliver det da lidt vanskligere.
+Da kan der med fordel udregnes frekvensen af hyppigheden af fly hvis landingsvarighed falder inden for de forskellige intervaller.
+Den kumulerede frekvens kan da udregnes for hvert af intervallerne.
+Hvis der nu trækkes et tilfældigt tal mellem $0-1$ må det ligge mellem en af to kumulerede frekvenser, og da kan der trækkes en tilfældig landingsvarighed i det tidsinterval frekvensen svarer til.
+Denne metode kan gentages for alle fly uanset antallet, og fordeligen af flyenes landingsvarighed vil da forblive den samme som det data der er blevet givet for en "typisk" dag. 
+
+I Kildekode \ref{code:gen} ses løsningen som \textsc{Python}-kode.
+
+\begin{lstlisting}[language=Python, caption={generate\_landing\_durations-funktionen i airplanes.py}, label=code:gen]
+# Genreate a list of landing durations
+def generate_landing_durations(planes):
+    data = [0, 16, 33, 61, 41, 25, 10, 8, 6]
+    min_ = 0
+    max_ = 30
+    model = [[0.0, 0, 30]]
+    for index, num in enumerate(data[1:]):
+        percent = float(num) / planes + model[index][0]
+        min_ = 1 + max_
+        max_ = 29 + min_
+        model.append([percent, min_, max_])
+    percent_list = [random.random() for i in range(planes)]
+    landing_durations = []
+    for percent in percent_list:
+        for index in range(len(model) - 1):
+            if model[index][0] < percent and percent <= model[index + 1][0]:
+                landing_durations.append(random.randint(model[index + 1][1], model[index + 1][2]))
+                break
+    return landing_durations
+\end{lstlisting}
+
+I funktionen bliver det givne data for landingsvarigheden først gemt i listen \code{data}. Listen \code{model} består af lister, hvor det første element er den kumulerede frekvens, det næste er den mindste værdi i tidsintervallet, og den sidste den største værdi i tidsintervallet.
+For hvert datapunkt i \code{data} (med undtagelse af det første) bliver der da udregnet en kumuleret frekvens og en min og max værdi for tidsintervallet, og disse gemmes i \code{model}. 
+Derefter trækkes der det samme antal tilfældige tal mellem $0-1$ som der er fly, og disse gemmes i \code{percent\_list}.
+For hver af disse værider bliver det tjekket hvilket tidsinterval de matcher, og der bliver da trukket et tilfældigt tal i dette interval, som bliver gemt i listen \code{landing\_durations}.
+Til slut returneres denne liste.
