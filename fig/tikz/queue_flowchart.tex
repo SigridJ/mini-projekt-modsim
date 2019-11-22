@@ -17,7 +17,7 @@
 	\node (dec4) [decision, below of=dec2, yshift=-5cm] {Er det næste event at en landingsbane bliver fri?};
 	\node (pro5a) [process, right of=dec4, xshift=3cm] {Sæt tiden lig den næste tid til en landing er færdig};
 	\node (dec5a) [decision, right of=pro5a, xshift=3cm] {Er der fly i køen?};
-	\node (pro6aa) [process, right of=dec5a, xshift=3cm] {Tag det forreste fly ud af køen og land flyet her. Udregn den næste tid en landing er flrdig for denne bane, og opdater den samlede ventetid med ventetiden for dette fly};
+	\node (pro6aa) [process, right of=dec5a, xshift=3cm] {Tag det forreste fly ud af køen og land flyet her. Udregn den næste tid en landing er færdig for denne bane, og opdater den samlede ventetid med ventetiden for dette fly};
 	\node (pro6ab) [process, below of=dec5a, yshift=-1cm] {Sæt landingsbanen til at være tom};
 	\node (out1) [io, below of=dec4, yshift=-4cm] {Udregn den gennemsnittelige ventetid og retuner denne};
 	\node (stop) [startstop, below of=out1] {Stop};
